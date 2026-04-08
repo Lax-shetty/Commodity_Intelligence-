@@ -231,31 +231,16 @@ PLOTLY_DARK = dict(
 # ══════════════════════════════════════════════════════════════════
 # SIDEBAR
 # ══════════════════════════════════════════════════════════════════
-with st.sidebar:
-    st.markdown(f"<div style='font-size:17px;font-weight:800;color:{C['pri']};'>📊 Commodity Intel</div>", unsafe_allow_html=True)
-    st.markdown(f"<div style='font-size:10px;color:{C['sec']};'>Market Intelligence · v6.0</div>", unsafe_allow_html=True)
-    st.markdown("---")
-    st.markdown("**🔑 API Keys**")
-    fred_key        = st.text_input("FRED API Key",     type="password", value=FRED_API_KEY)
-    news_key        = st.text_input("NewsAPI Key",       type="password", value=NEWS_API_KEY)
-    azure_key_input = st.text_input("Azure OpenAI Key", type="password", value=AZURE_API_KEY)
-    effective_azure_key = azure_key_input or AZURE_API_KEY
-    st.markdown("---")
-    st.markdown("**⚙️ Settings**")
-    period      = st.selectbox("Historical Period", ["6mo","1y","2y","3y"], index=1)
-    freight_adj = st.slider("Freight to India (USD/t)", 10, 40, 18)
-    port_misc   = st.slider("Port + misc (USD/t)", 3, 15, 7)
-    st.markdown("---")
-    st.markdown("**📡 Data Sources**")
-    for src, ok in [("FRED", bool(fred_key)), ("NewsAPI", bool(news_key)),
-                    ("Azure OpenAI", bool(effective_azure_key)),
-                    ("Exchange Rate API", True), ("RSS Feeds", True)]:
-        b = f'<span class="bok">✓</span>' if ok else f'<span class="bmiss">✗</span>'
-        st.markdown(f"{b} &nbsp;{src}", unsafe_allow_html=True)
-    st.markdown("---")
-    if st.button("🔄 Refresh All Data", use_container_width=True, type="primary"):
-        st.cache_data.clear()
-        st.rerun()
+fred_key            = FRED_API_KEY
+news_key            = NEWS_API_KEY
+effective_azure_key = AZURE_API_KEY
+
+period      = st.sidebar.selectbox("Historical Period", ["6mo","1y","2y","3y"], index=1)
+freight_adj = st.sidebar.slider("Freight to India (USD/t)", 10, 40, 18)
+port_misc   = st.sidebar.slider("Port + misc (USD/t)", 3, 15, 7)
+if st.sidebar.button("🔄 Refresh All Data", use_container_width=True, type="primary"):
+    st.cache_data.clear()
+    st.rerun()
 
 # ══════════════════════════════════════════════════════════════════
 # SESSION STATE
