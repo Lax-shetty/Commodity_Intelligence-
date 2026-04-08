@@ -1,0 +1,1 @@
+streamlit pandas plotly requests feedparser beautifulsoup4 numpy certifi reportlab kaleido
