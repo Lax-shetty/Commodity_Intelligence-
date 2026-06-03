@@ -216,10 +216,10 @@ section[data-testid="stSidebar"] {{ background: var(--card); border-right: 1px s
 .stSlider [data-baseweb="slider"] [role="slider"] {
     background: var(--accent) !important;
     border-color: var(--accent) !important;
-}
+}}
 .stSlider [data-baseweb="slider"] div[class*="Track"] div[class*="Track"] {
     background: var(--accent) !important;
-}
+}}
 /* Hero banner */
 .hero {{ background: linear-gradient(135deg, {C['card']} 0%, {C['subtle']} 100%);
          border: 1px solid var(--border); border-radius: 14px;
