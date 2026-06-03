@@ -216,11 +216,12 @@ section[data-testid="stSidebar"] {{ background: var(--card); border-right: 1px s
 .stSlider [data-baseweb="slider"] [role="slider"] {{
     background: var(--accent) !important;
     border-color: var(--accent) !important;
+/* Sliders */
+.stSlider [data-baseweb="slider"] [role="slider"] {{
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
 }}
 .stSlider [data-baseweb="slider"] div[class*="Track"] div[class*="Track"] {{
-    background: var(--accent) !important;
-}}
-.stSlider [data-baseweb="slider"] div[class*="Track"] div[class*="Track"] {
     background: var(--accent) !important;
 }}
 /* Hero banner */
@@ -232,6 +233,8 @@ section[data-testid="stSidebar"] {{ background: var(--card); border-right: 1px s
 .hero-accent {{ color:var(--accent); }}
 </style>
 """, unsafe_allow_html=True)
+PLOTLY_DARK = dict(
+"", unsafe_allow_html=True)
 
 PLOTLY_DARK = dict(
     template="plotly_dark", paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
