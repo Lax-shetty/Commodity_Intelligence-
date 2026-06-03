@@ -221,7 +221,7 @@ section[data-testid="stSidebar"] {{ background: var(--card); border-right: 1px s
     background: var(--accent) !important;
 }}
 /* Hero banner */
-.hero {{ background: linear-gradient(135deg, {C['card']} 0%, {C['subtle']} 100%);
+.hero {{ background: linear-gradient(135deg, #1e293b 0%, #263348 100%);
          border: 1px solid var(--border); border-radius: 14px;
          padding: 24px 28px; margin-bottom: 16px; }}
 .hero h2 {{ color:var(--pri); font-size:1.6rem; font-weight:800; margin:0 0 4px 0; }}
