@@ -276,19 +276,21 @@ for k, v in [("selected", None), ("chat", {}), ("narr", {}), ("grp", "All")]:
 def _fred(series_id, api_key, years=3):
     if not api_key: return None
     start = (datetime.now() - timedelta(days=365*years)).strftime("%Y-%m-%d")
-    try:
-        r = _session.get("https://api.stlouisfed.org/fred/series/observations",
-                         params=dict(series_id=series_id, api_key=api_key,
-                                     file_type="json", observation_start=start), timeout=15)
-        r.raise_for_status()
-        obs = [o for o in r.json().get("observations",[]) if o["value"] != "."]
-        if not obs: return None
-        df = pd.DataFrame(obs)[["date","value"]]
-        df["date"]  = pd.to_datetime(df["date"])
-        df["value"] = pd.to_numeric(df["value"], errors="coerce")
-        return df.dropna(subset=["value"]).set_index("date").sort_index()
-    except Exception:
-        return None
+    for attempt in range(3):
+        try:
+            r = _session.get("https://api.stlouisfed.org/fred/series/observations",
+                             params=dict(series_id=series_id, api_key=api_key,
+                                         file_type="json", observation_start=start), timeout=30)
+            r.raise_for_status()
+            obs = [o for o in r.json().get("observations",[]) if o["value"] != "."]
+            if not obs: return None
+            df = pd.DataFrame(obs)[["date","value"]]
+            df["date"]  = pd.to_datetime(df["date"])
+            df["value"] = pd.to_numeric(df["value"], errors="coerce")
+            return df.dropna(subset=["value"]).set_index("date").sort_index()
+        except Exception:
+            time.sleep(1)
+    return None
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def fetch_price(commodity: str, period: str, fred_key: str):
