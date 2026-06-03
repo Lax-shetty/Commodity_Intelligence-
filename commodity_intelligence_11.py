@@ -242,10 +242,9 @@ with st.sidebar:
     st.markdown(f"<div style='font-size:17px;font-weight:800;color:{C['pri']};'>📊 Commodity Intel</div>", unsafe_allow_html=True)
     st.markdown(f"<div style='font-size:10px;color:{C['sec']};'>Market Intelligence · v6.0</div>", unsafe_allow_html=True)
     st.markdown("---")
-    st.markdown("**🔑 API Keys**")
-    fred_key        = st.text_input("FRED API Key",     type="password", value=FRED_API_KEY)
-    news_key        = st.text_input("NewsAPI Key",       type="password", value=NEWS_API_KEY)
-    azure_key_input = st.text_input("Azure OpenAI Key", type="password", value=AZURE_API_KEY)
+    fred_key        = FRED_API_KEY
+    news_key        = NEWS_API_KEY
+    azure_key_input = AZURE_API_KEY
     effective_azure_key = azure_key_input or AZURE_API_KEY
     st.markdown("---")
     st.markdown("**⚙️ Settings**")
