@@ -275,7 +275,7 @@ for k, v in [("selected", None), ("chat", {}), ("narr", {}), ("grp", "All")]:
 # ══════════════════════════════════════════════════════════════════
 def _fred(series_id, api_key, years=3):
     if not api_key: return None
-    start = (datetime.now() - timedelta(days=365*years)).strftime("%Y-%m-%d")
+    start = "2020-01-01"
     for attempt in range(3):
         try:
             r = _session.get("https://api.stlouisfed.org/fred/series/observations",
@@ -298,7 +298,7 @@ def fetch_price(commodity: str, period: str, fred_key: str):
     if not fred_key:
         return {"data": None, "error": "No FRED key", "fetched_at": None}
     days  = {"6mo":180,"1y":365,"2y":730,"3y":1095}.get(period, 365)
-    years = max(1, days//365) + 1
+    years = max(2, days//365) + 2
     df    = None
     for sid in [cfg["fred"]] + cfg.get("fallbacks", []):
         df = _fred(sid, fred_key, years=years)
