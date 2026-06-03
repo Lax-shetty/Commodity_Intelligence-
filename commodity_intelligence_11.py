@@ -213,9 +213,12 @@ section[data-testid="stSidebar"] {{ background: var(--card); border-right: 1px s
 .stButton > button {{ background:var(--accent) !important; color:#fff !important;
                      border:none !important; border-radius:6px !important; font-weight:600 !important; }}
 /* Sliders */
-.stSlider [data-baseweb="slider"] [role="slider"] {
+.stSlider [data-baseweb="slider"] [role="slider"] {{
     background: var(--accent) !important;
     border-color: var(--accent) !important;
+}}
+.stSlider [data-baseweb="slider"] div[class*="Track"] div[class*="Track"] {{
+    background: var(--accent) !important;
 }}
 .stSlider [data-baseweb="slider"] div[class*="Track"] div[class*="Track"] {
     background: var(--accent) !important;
