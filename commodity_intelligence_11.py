@@ -907,6 +907,13 @@ with st.spinner("⚡ Loading market data…"):
     inr_data   = fetch_inr()
     macro      = fetch_macro(fred_key, period)
 
+# TEMP DEBUG — remove after fixing
+with st.expander("🔍 Debug Info"):
+    for name, result in all_prices.items():
+        st.write(f"{name}: data={result.get('data') is not None} | error={result.get('error')}")
+    st.write(f"FRED key set: {bool(fred_key)}")
+    st.write(f"INR rate: {inr_data.get('current')}")
+
 inr_rate = inr_data.get("current")
 inr_hist = inr_data.get("history")
 
