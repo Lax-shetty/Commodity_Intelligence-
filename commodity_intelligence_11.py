@@ -42,14 +42,14 @@ _session.headers.update({"User-Agent": "Mozilla/5.0 (compatible; CommodityIntel/
 # ══════════════════════════════════════════════════════════════════
 COMMODITIES = {
     "Iron Ore":     {"icon":"⛏️",  "fred":"PIORECRUSDM",     "fallbacks":[],                              "unit":"USD/DMT","color":"#ef4444","group":"Metals", "geo":"Australia & Brazil dominate ~80% of seaborne supply.", "sources":"Australia, Brazil, South Africa"},
-    "Steel Long":   {"icon":"🔩",  "fred":"PSTEELHRCOMUSDM", "fallbacks":["PSTEELCRCOMUSDM","WPU101707"], "unit":"USD/MT", "color":"#6366f1","group":"Steel",  "geo":"China produces ~55% of global steel. India is fastest growing market.", "sources":"China, Japan, South Korea, India"},
-    "Steel Flat":   {"icon":"🪛",  "fred":"PSTEELHRCOMUSDM", "fallbacks":["PSTEELCRCOMUSDM","WPU101703"], "unit":"USD/MT", "color":"#8b5cf6","group":"Steel",  "geo":"HRC prices are key benchmark. Auto & white goods sectors are main consumers.", "sources":"China, Japan, EU, South Korea"},
+    "Steel Long":   {"icon":"🔩",  "fred":"PSTEELQSTMUSDM", "fallbacks":["WPU101707"], "unit":"USD/MT", "color":"#6366f1","group":"Steel",  "geo":"China produces ~55% of global steel. India is fastest growing market.", "sources":"China, Japan, South Korea, India"},
+    "Steel Flat":   {"icon":"🪛",  "fred":"PSTEELQSTMUSDM", "fallbacks":["WPU101703"], "unit":"USD/MT", "color":"#8b5cf6","group":"Steel",  "geo":"HRC prices are key benchmark. Auto & white goods sectors are main consumers.", "sources":"China, Japan, EU, South Korea"},
     "Zinc":         {"icon":"🔬",  "fred":"PZINCUSDM",       "fallbacks":[],                              "unit":"USD/MT", "color":"#06b6d4","group":"Metals", "geo":"Used mainly for galvanizing steel. China is largest producer & consumer.", "sources":"China, Australia, Peru, India"},
     "Copper":       {"icon":"🟤",  "fred":"PCOPPUSDM",       "fallbacks":[],                              "unit":"USD/MT", "color":"#f97316","group":"Metals", "geo":"Key indicator of global economic health. EV transition driving long-term demand.", "sources":"Chile, Peru, Congo, China"},
     "Aluminium":    {"icon":"⚡",  "fred":"PALUMUSDM",       "fallbacks":[],                              "unit":"USD/MT", "color":"#a3a3a3","group":"Metals", "geo":"Energy-intensive production. Power costs & China output quotas drive prices.", "sources":"China, Russia, Canada, India"},
     "Pig Iron":     {"icon":"🏭",  "fred":"PIORECRUSDM",     "fallbacks":[],                              "unit":"USD/MT", "color":"#78716c","group":"Steel",  "geo":"Intermediate product between iron ore and steel. Tracks iron ore + coking coal costs.", "sources":"China, Russia, Ukraine, Brazil"},
-    "Cement":       {"icon":"🏗️",  "fred":"PCEMENTINDM",     "fallbacks":["WPS13","PCU327310327310"],     "unit":"USD/MT", "color":"#d6d3d1","group":"Other",  "geo":"Highly regional commodity. India is world's 2nd largest producer & consumer.", "sources":"India (domestic), China, Vietnam"},
-    "Coking Coal":  {"icon":"🪨",  "fred":"PCOALUSDM",       "fallbacks":["PCOALAUUSDM"],                "unit":"USD/MT", "color":"#44403c","group":"Coal",   "geo":"Essential for steel production. Australia is largest exporter. India heavily imports.", "sources":"Australia, USA, Canada, Russia"},
+    "Cement":       {"icon":"🏗️",  "fred":"WPU133",         "fallbacks":["PCU327310327310"],     "unit":"USD/MT", "color":"#d6d3d1","group":"Other",  "geo":"Highly regional commodity. India is world's 2nd largest producer & consumer.", "sources":"India (domestic), China, Vietnam"},
+    "Coking Coal":  {"icon":"🪨",  "fred":"PCOALAUUSDM",    "fallbacks":[],                "unit":"USD/MT", "color":"#44403c","group":"Coal",   "geo":"Essential for steel production. Australia is largest exporter. India heavily imports.", "sources":"Australia, USA, Canada, Russia"},
     "Thermal Coal": {"icon":"🔥",  "fred":"PCOALAUUSDM",     "fallbacks":[],                              "unit":"USD/MT", "color":"#854d0e","group":"Coal",   "geo":"Power generation fuel. Newcastle benchmark. India imports ~200Mt/yr.", "sources":"Indonesia, Australia, South Africa, Russia"},
 }
 
@@ -212,7 +212,14 @@ section[data-testid="stSidebar"] {{ background: var(--card); border-right: 1px s
 /* Buttons */
 .stButton > button {{ background:var(--accent) !important; color:#fff !important;
                      border:none !important; border-radius:6px !important; font-weight:600 !important; }}
-
+/* Sliders */
+.stSlider [data-baseweb="slider"] [role="slider"] {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+}
+.stSlider [data-baseweb="slider"] div[class*="Track"] div[class*="Track"] {
+    background: var(--accent) !important;
+}
 /* Hero banner */
 .hero {{ background: linear-gradient(135deg, {C['card']} 0%, {C['subtle']} 100%);
          border: 1px solid var(--border); border-radius: 14px;
@@ -231,16 +238,31 @@ PLOTLY_DARK = dict(
 # ══════════════════════════════════════════════════════════════════
 # SIDEBAR
 # ══════════════════════════════════════════════════════════════════
-fred_key            = FRED_API_KEY
-news_key            = NEWS_API_KEY
-effective_azure_key = AZURE_API_KEY
-
-period      = st.sidebar.selectbox("Historical Period", ["6mo","1y","2y","3y"], index=1)
-freight_adj = st.sidebar.slider("Freight to India (USD/t)", 10, 40, 18)
-port_misc   = st.sidebar.slider("Port + misc (USD/t)", 3, 15, 7)
-if st.sidebar.button("🔄 Refresh All Data", use_container_width=True, type="primary"):
-    st.cache_data.clear()
-    st.rerun()
+with st.sidebar:
+    st.markdown(f"<div style='font-size:17px;font-weight:800;color:{C['pri']};'>📊 Commodity Intel</div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='font-size:10px;color:{C['sec']};'>Market Intelligence · v6.0</div>", unsafe_allow_html=True)
+    st.markdown("---")
+    st.markdown("**🔑 API Keys**")
+    fred_key        = st.text_input("FRED API Key",     type="password", value=FRED_API_KEY)
+    news_key        = st.text_input("NewsAPI Key",       type="password", value=NEWS_API_KEY)
+    azure_key_input = st.text_input("Azure OpenAI Key", type="password", value=AZURE_API_KEY)
+    effective_azure_key = azure_key_input or AZURE_API_KEY
+    st.markdown("---")
+    st.markdown("**⚙️ Settings**")
+    period      = st.selectbox("Historical Period", ["6mo","1y","2y","3y"], index=1)
+    freight_adj = st.slider("Freight to India (USD/t)", 10, 40, 18)
+    port_misc   = st.slider("Port + misc (USD/t)", 3, 15, 7)
+    st.markdown("---")
+    st.markdown("**📡 Data Sources**")
+    for src, ok in [("FRED", bool(fred_key)), ("NewsAPI", bool(news_key)),
+                    ("Azure OpenAI", bool(effective_azure_key)),
+                    ("Exchange Rate API", True), ("RSS Feeds", True)]:
+        b = f'<span class="bok">✓</span>' if ok else f'<span class="bmiss">✗</span>'
+        st.markdown(f"{b} &nbsp;{src}", unsafe_allow_html=True)
+    st.markdown("---")
+    if st.button("🔄 Refresh All Data", use_container_width=True, type="primary"):
+        st.cache_data.clear()
+        st.rerun()
 
 # ══════════════════════════════════════════════════════════════════
 # SESSION STATE
@@ -1010,10 +1032,10 @@ if st.session_state["selected"] is None:
 
             # short description per group
             desc_map = {
-                "Metals": "Base metal · LME traded",
-                "Steel":  "Steel product · Construction & Mfg",
-                "Coal":   "Energy commodity · Power & Steel",
-                "Other":  "Construction material",
+                "Metals": "Base metal · Global exchange traded",
+                "Steel":  "Steel product · Construction & Manufacturing",
+                "Coal":   "Energy & coking commodity",
+                "Other":  "Construction material · Regional market",
             }
             desc = desc_map.get(cfg["group"], "")
 
