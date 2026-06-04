@@ -42,15 +42,15 @@ _session.headers.update({"User-Agent": "Mozilla/5.0 (compatible; CommodityIntel/
 # ══════════════════════════════════════════════════════════════════
 COMMODITIES = {
     "Iron Ore":     {"icon":"⛏️",  "fred":"PIORECRUSDM",     "fallbacks":[],                              "unit":"USD/DMT","color":"#ef4444","group":"Metals", "geo":"Australia & Brazil dominate ~80% of seaborne supply.", "sources":"Australia, Brazil, South Africa"},
-    "Steel Long":   {"icon":"🔩",  "fred":"WPU101707",  "fallbacks":["WPU10170703"], "unit":"USD/MT", "color":"#6366f1","group":"Steel",  "geo":"China produces ~55% of global steel. India is fastest growing market.", "sources":"China, Japan, South Korea, India"},
-    "Steel Flat":   {"icon":"🪛",  "fred":"PSTEELQSTMUSDM", "fallbacks":["WPU101703"], "unit":"USD/MT", "color":"#8b5cf6","group":"Steel",  "geo":"HRC prices are key benchmark. Auto & white goods sectors are main consumers.", "sources":"China, Japan, EU, South Korea"},
+    "Steel Long":   {"icon":"🔩",  "fred":"PSTEELHRCOMUSDM", "fallbacks":["PSTEELCRCOMUSDM","WPU101707"], "unit":"USD/MT", "color":"#6366f1","group":"Steel",  "geo":"China produces ~55% of global steel. India is fastest growing market.", "sources":"China, Japan, South Korea, India"},
+    "Steel Flat":   {"icon":"🪛",  "fred":"PSTEELCRCOMUSDM", "fallbacks":["PSTEELHRCOMUSDM","WPU101703"], "unit":"USD/MT", "color":"#8b5cf6","group":"Steel",  "geo":"HRC prices are key benchmark. Auto & white goods sectors are main consumers.", "sources":"China, Japan, EU, South Korea"},
     "Zinc":         {"icon":"🔬",  "fred":"PZINCUSDM",       "fallbacks":[],                              "unit":"USD/MT", "color":"#06b6d4","group":"Metals", "geo":"Used mainly for galvanizing steel. China is largest producer & consumer.", "sources":"China, Australia, Peru, India"},
     "Copper":       {"icon":"🟤",  "fred":"PCOPPUSDM",       "fallbacks":[],                              "unit":"USD/MT", "color":"#f97316","group":"Metals", "geo":"Key indicator of global economic health. EV transition driving long-term demand.", "sources":"Chile, Peru, Congo, China"},
     "Aluminium":    {"icon":"⚡",  "fred":"PALUMUSDM",       "fallbacks":[],                              "unit":"USD/MT", "color":"#a3a3a3","group":"Metals", "geo":"Energy-intensive production. Power costs & China output quotas drive prices.", "sources":"China, Russia, Canada, India"},
-    "Pig Iron":     {"icon":"🏭",  "fred":"PIORECRUSDM",     "fallbacks":[],                              "unit":"USD/MT", "color":"#78716c","group":"Steel",  "geo":"Intermediate product between iron ore and steel. Tracks iron ore + coking coal costs.", "sources":"China, Russia, Ukraine, Brazil"},
-    "Cement":       {"icon":"🏗️",  "fred":"WPU133",         "fallbacks":["PCU327310327310"],     "unit":"USD/MT", "color":"#d6d3d1","group":"Other",  "geo":"Highly regional commodity. India is world's 2nd largest producer & consumer.", "sources":"India (domestic), China, Vietnam"},
-    "Coking Coal":  {"icon":"🪨",  "fred":"PCOALAUUSDM","fallbacks":["PCOALUSDM"],                "unit":"USD/MT", "color":"#44403c","group":"Coal",   "geo":"Essential for steel production. Australia is largest exporter. India heavily imports.", "sources":"Australia, USA, Canada, Russia"},
-    "Thermal Coal": {"icon":"🔥",  "fred":"PCOALAUUSDM",     "fallbacks":[],                              "unit":"USD/MT", "color":"#854d0e","group":"Coal",   "geo":"Power generation fuel. Newcastle benchmark. India imports ~200Mt/yr.", "sources":"Indonesia, Australia, South Africa, Russia"},
+    "Pig Iron":     {"icon":"🏭",  "fred":"PIORECRUSDM",     "fallbacks":[],                              "proxy_note":"Proxied from Iron Ore — no direct free series", "unit":"USD/MT", "color":"#78716c","group":"Steel",  "geo":"Intermediate product between iron ore and steel. Tracks iron ore + coking coal costs.", "sources":"China, Russia, Ukraine, Brazil"},
+    "Cement":       {"icon":"🏗️",  "fred":"PCEMENTINDM",     "fallbacks":["WPS13","PCU327310327310"],     "unit":"USD/MT", "color":"#d6d3d1","group":"Other",  "geo":"Highly regional commodity. India is world's 2nd largest producer & consumer.", "sources":"India (domestic), China, Vietnam"},
+    "Coking Coal":  {"icon":"🪨",  "fred":"PCOALUSDM",       "fallbacks":["PCOALAUUSDM"],                "proxy_note":"Australia Coal benchmark proxy (PCOALUSDM)", "unit":"USD/MT", "color":"#44403c","group":"Coal",   "geo":"Essential for steel production. Australia is largest exporter. India heavily imports.", "sources":"Australia, USA, Canada, Russia"},
+    "Thermal Coal": {"icon":"🔥",  "fred":"PCOALAUUSDM",     "fallbacks":[],                              "proxy_note":"Newcastle Coal benchmark (PCOALAUUSDM)", "unit":"USD/MT", "color":"#854d0e","group":"Coal",   "geo":"Power generation fuel. Newcastle benchmark. India imports ~200Mt/yr.", "sources":"Indonesia, Australia, South Africa, Russia"},
 }
 
 INDIA_IMPACT = {
@@ -212,16 +212,9 @@ section[data-testid="stSidebar"] {{ background: var(--card); border-right: 1px s
 /* Buttons */
 .stButton > button {{ background:var(--accent) !important; color:#fff !important;
                      border:none !important; border-radius:6px !important; font-weight:600 !important; }}
-/* Sliders */
-.stSlider [data-baseweb="slider"] [role="slider"] {{
-    background: var(--accent) !important;
-    border-color: var(--accent) !important;
-}}
-.stSlider [data-baseweb="slider"] div[class*="Track"] div[class*="Track"] {{
-    background: var(--accent) !important;
-}}
+
 /* Hero banner */
-.hero {{ background: linear-gradient(135deg, #1e293b 0%, #263348 100%);
+.hero {{ background: linear-gradient(135deg, {C['card']} 0%, {C['subtle']} 100%);
          border: 1px solid var(--border); border-radius: 14px;
          padding: 24px 28px; margin-bottom: 16px; }}
 .hero h2 {{ color:var(--pri); font-size:1.6rem; font-weight:800; margin:0 0 4px 0; }}
@@ -242,9 +235,10 @@ with st.sidebar:
     st.markdown(f"<div style='font-size:17px;font-weight:800;color:{C['pri']};'>📊 Commodity Intel</div>", unsafe_allow_html=True)
     st.markdown(f"<div style='font-size:10px;color:{C['sec']};'>Market Intelligence · v6.0</div>", unsafe_allow_html=True)
     st.markdown("---")
-    fred_key        = FRED_API_KEY
-    news_key        = NEWS_API_KEY
-    azure_key_input = AZURE_API_KEY
+    st.markdown("**🔑 API Keys**")
+    fred_key        = st.text_input("FRED API Key",     type="password", value=FRED_API_KEY)
+    news_key        = st.text_input("NewsAPI Key",       type="password", value=NEWS_API_KEY)
+    azure_key_input = st.text_input("Azure OpenAI Key", type="password", value=AZURE_API_KEY)
     effective_azure_key = azure_key_input or AZURE_API_KEY
     st.markdown("---")
     st.markdown("**⚙️ Settings**")
@@ -275,22 +269,20 @@ for k, v in [("selected", None), ("chat", {}), ("narr", {}), ("grp", "All")]:
 # ══════════════════════════════════════════════════════════════════
 def _fred(series_id, api_key, years=3):
     if not api_key: return None
-    start = "2020-01-01"
-    for attempt in range(3):
-        try:
-            r = _session.get("https://api.stlouisfed.org/fred/series/observations",
-                             params=dict(series_id=series_id, api_key=api_key,
-                                         file_type="json", observation_start=start), timeout=30)
-            r.raise_for_status()
-            obs = [o for o in r.json().get("observations",[]) if o["value"] != "."]
-            if not obs: return None
-            df = pd.DataFrame(obs)[["date","value"]]
-            df["date"]  = pd.to_datetime(df["date"])
-            df["value"] = pd.to_numeric(df["value"], errors="coerce")
-            return df.dropna(subset=["value"]).set_index("date").sort_index()
-        except Exception:
-            time.sleep(1)
-    return None
+    start = (datetime.now() - timedelta(days=365*years)).strftime("%Y-%m-%d")
+    try:
+        r = _session.get("https://api.stlouisfed.org/fred/series/observations",
+                         params=dict(series_id=series_id, api_key=api_key,
+                                     file_type="json", observation_start=start), timeout=15)
+        r.raise_for_status()
+        obs = [o for o in r.json().get("observations",[]) if o["value"] != "."]
+        if not obs: return None
+        df = pd.DataFrame(obs)[["date","value"]]
+        df["date"]  = pd.to_datetime(df["date"])
+        df["value"] = pd.to_numeric(df["value"], errors="coerce")
+        return df.dropna(subset=["value"]).set_index("date").sort_index()
+    except Exception:
+        return None
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def fetch_price(commodity: str, period: str, fred_key: str):
@@ -298,7 +290,7 @@ def fetch_price(commodity: str, period: str, fred_key: str):
     if not fred_key:
         return {"data": None, "error": "No FRED key", "fetched_at": None}
     days  = {"6mo":180,"1y":365,"2y":730,"3y":1095}.get(period, 365)
-    years = max(2, days//365) + 2
+    years = max(1, days//365) + 1
     df    = None
     for sid in [cfg["fred"]] + cfg.get("fallbacks", []):
         df = _fred(sid, fred_key, years=years)
@@ -907,13 +899,6 @@ with st.spinner("⚡ Loading market data…"):
     inr_data   = fetch_inr()
     macro      = fetch_macro(fred_key, period)
 
-# TEMP DEBUG — remove after fixing
-with st.expander("🔍 Debug Info"):
-    for name, result in all_prices.items():
-        st.write(f"{name}: data={result.get('data') is not None} | error={result.get('error')}")
-    st.write(f"FRED key set: {bool(fred_key)}")
-    st.write(f"INR rate: {inr_data.get('current')}")
-
 inr_rate = inr_data.get("current")
 inr_hist = inr_data.get("history")
 
@@ -1040,10 +1025,10 @@ if st.session_state["selected"] is None:
 
             # short description per group
             desc_map = {
-                "Metals": "Base metal · Global exchange traded",
-                "Steel":  "Steel product · Construction & Manufacturing",
-                "Coal":   "Energy & coking commodity",
-                "Other":  "Construction material · Regional market",
+                "Metals": "Base metal · LME traded",
+                "Steel":  "Steel product · Construction & Mfg",
+                "Coal":   "Energy commodity · Power & Steel",
+                "Other":  "Construction material",
             }
             desc = desc_map.get(cfg["group"], "")
 
@@ -1059,6 +1044,7 @@ if st.session_state["selected"] is None:
                   <div class="c-desc">{desc}</div>
                   <div class="c-price">{f"{price:,.1f}" if price else "—"}</div>
                   <div class="c-unit">{cfg['unit']}</div>
+                  {f'<div style="color:#f59e0b;font-size:9px;margin-top:2px;">⚠ Proxy data</div>' if cfg.get('proxy_note') else ''}
                   <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
                     <span class="{cls}">{dtxt} MoM</span>
                     {pill}
@@ -1068,8 +1054,10 @@ if st.session_state["selected"] is None:
                 if spk and len(spk) > 2:
                     st.plotly_chart(spark_fig(spk, cfg["color"]),
                                     use_container_width=True, config={"displayModeBar":False})
-                if st.button(f"Open {name}", key=f"open_{name}", use_container_width=True):
-                    st.session_state["selected"] = name; st.rerun()
+                col_btn, col_gap = st.columns([3, 1])
+                with col_btn:
+                    if st.button(f"↗ {name}", key=f"open_{name}", use_container_width=True):
+                        st.session_state["selected"] = name; st.rerun()
         st.markdown("<br>", unsafe_allow_html=True)
 
     # ══════════════════════════════════════════════════════════════
